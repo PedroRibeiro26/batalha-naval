@@ -106,3 +106,15 @@ while(Fim_Jogo == false){
         }
     }
 }
+
+/*
+1. Validar as coordenadas
+Seu código verifica se o valor é numérico, mas não verificar se a coordenada está dentro do tabuleiro
+
+2. Evitar barcos na mesma posição
+Atualmente, você pode sortear dois barcos na mesma posição
+Isso acontece porque não existe uma verificação antes de posicionar um novo barco
+
+3. Impedir que o jogador acerte o mesmo barco várias vezes e farme Pontos
+Precisa guardar as posições já jogadas e verificar a cada jogada se está repetindo
+*/

@@ -32,13 +32,19 @@ while(Fim_Jogo == false){
      * true = navios
      ****************/
 
-
     // sorteia as posições dos navios na matriz
-    for(let i = 0; i <= Quant_Navios; i++){
-        let PosicaoX = parseInt(Math.floor(Math.random() *5));
-        let PosicaoY = parseInt(Math.floor(Math.random() *5));
+    for (let i = 0; i < Quant_Navios; i++) {
+        let PosicaoX, PosicaoY;
+
+        do {
+            PosicaoX = Math.floor(Math.random() * 5);
+            PosicaoY = Math.floor(Math.random() * 5);
+        } while (Tabuleiro[PosicaoX][PosicaoY] === true);
+
         Tabuleiro[PosicaoX][PosicaoY] = true;
-    }
+}
+
+    console.log(Tabuleiro)
 
 
     /********************************************************
@@ -75,6 +81,9 @@ while(Fim_Jogo == false){
             console.log("*********************************\n");
         }
 
+        // transforma navio atingido em agua
+        Tabuleiro[TiroPosicaoX][TiroPosicaoY] = false;
+
         // reduz a quantidade de tiros
         Quant_Tiros--;
 
@@ -109,12 +118,5 @@ while(Fim_Jogo == false){
 
 /*
 1. Validar as coordenadas
-Seu código verifica se o valor é numérico, mas não verificar se a coordenada está dentro do tabuleiro
-
-2. Evitar barcos na mesma posição
-Atualmente, você pode sortear dois barcos na mesma posição
-Isso acontece porque não existe uma verificação antes de posicionar um novo barco
-
-3. Impedir que o jogador acerte o mesmo barco várias vezes e farme Pontos
-Precisa guardar as posições já jogadas e verificar a cada jogada se está repetindo
+Seu código verifica se o valor é numérico, mas não verifica se a coordenada está dentro do tabuleiro
 */

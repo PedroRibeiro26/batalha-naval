@@ -6,125 +6,156 @@
  *********************************************************/
 
 const teclado = require("prompt-sync")();
-var Fim_Jogo = false;
+var Fim_jogo = true;
 
-// configura saida do jogo
-while(Fim_Jogo == false){
-    // variaveis de ambiente
-    let Tamanho_Mapa = 5;
-    let Quant_Navios = 5; 
-    let Quant_jogadas = 5;
-    let Quant_Tiros = 5;
-    let Pontos = 0;
-
-    // cria uma matriz
+    /***************************************************
+     * Variaveis de ambiente
+     ***************************************************/
     let Tabuleiro = [];
+    let Mapa = [];
+    var Tamanho_Mapa;
+    var Quant_Barcos;
+    var Quant_Tiros;
+    var Quant_jogadas;
+    var Pontos = 0;
+    
+console.log("***** Batalha naval *****");
 
-    // preenche o mapa com água
-    for(let linha = 0; linha <= Tamanho_Mapa; linha++){
-        Tabuleiro[linha] = [];
-        for(let coluna = 0; coluna <= Tamanho_Mapa; coluna++){
-            Tabuleiro[linha][coluna] = false;
-        }
-    }
-    /****************
-     * false = agua
-     * true = navios
-     ****************/
+let nivel = teclado("Digite a dificuldade desejada:");
 
-    // sorteia as posições dos navios na matriz
-    for (let i = 0; i < Quant_Navios; i++) {
-        let PosicaoX, PosicaoY;
-
-        do {
-            PosicaoX = Math.floor(Math.random() * 5);
-            PosicaoY = Math.floor(Math.random() * 5);
-        } while (Tabuleiro[PosicaoX][PosicaoY] === true);
-
-        Tabuleiro[PosicaoX][PosicaoY] = true;
+switch(nivel){
+    case "facil":
+        // dificuldade facil
+        Tamanho_Mapa = 5;
+        Quant_Barcos = 5;
+        Quant_Tiros = 15;
+        Quant_jogadas = 15;
+        break;
+    case "normal":
+        // dificuldade normal
+        Tamanho_Mapa = 7;
+        Quant_Barcos = 10;
+        Quant_Tiros = 15;
+        Quant_jogadas = 15;
+        break;
+    case "dificil":
+        // dificuldade dificil
+        Tamanho_Mapa = 9;
+        Quant_Barcos = 8;
+        Quant_Tiros = 15;
+        Quant_jogadas = 15;
+        break;
+    default:
+        // dificuldade facil
+        Tamanho_Mapa = 5;
+        Quant_Barcos = 5;
+        Quant_Tiros = 15;
+        Quant_jogadas = 15;
+        break;
 }
 
-    console.log(Tabuleiro)
+// configura a saida do jogo
+while(Fim_jogo){
 
+    /***************************************************
+     * Preenche o mapa com água - 0
+     ***************************************************/
+    for(let linha = 0; linha < Tamanho_Mapa; linha++){
+        Tabuleiro[linha] = [];
+        for(let coluna = 0; coluna < Tamanho_Mapa; coluna++){
+            Tabuleiro[linha][coluna] = 0;
+        }
+    }
 
-    /********************************************************
-     * Jogada do player
-     ********************************************************/
-    console.log("\nTIROS RESTANTES: ", Quant_Tiros);
-    console.log("PONTUAÇÃO: ", Pontos);
+    for(let x = 0; x < Tamanho_Mapa; x++){
+        Mapa[x] = [];
+        for(let y = 0; y < Tamanho_Mapa; y++){
+            Mapa[x][y] = "~";
+        }
+    }
+    console.table(Mapa);
 
-    for(let j = 1; j <= Quant_jogadas; j++){
-        let TiroPosicaoX = parseInt(teclado("Digite a coordenada em X: "));
-            if(TiroPosicaoX > 5){
-                console.log("Digite uma coordenada de 0 a 5!");
-                let TiroPosicaoX = teclado("Digite a coordenada em X: ");
-            }
-        let TiroPosicaoY = parseInt(teclado("Digite a coordenada em Y: "));
-            if(TiroPosicaoY > 5){
-                console.log("Digite uma coordenada de 0 a 5!")
-                let TiroPosicaoX = teclado("Digite a coordenada em Y: ");
-            }
+    /***************************************************
+     * Sortea a posicao dos barcos e posiciona
+     ***************************************************/
+    for(let i = 0; i < Quant_Barcos; i++){
+        let PosicaoX;
+        let PosicaoY;
 
-        // verifica se input não é número vulgo coordenada
-        if(isNaN(TiroPosicaoX) || isNaN(TiroPosicaoY)){
-            console.log("Digite uma coordenada válida!");
-            let TiroPosicaoX = teclado("Digite a coordenada em X: ");
-            let TiroPosicaoY = teclado("Digite a coordenada em Y: ");
+        do{
+            PosicaoX = Math.floor(Math.random() *5);
+            PosicaoY = Math.floor(Math.random() *5);
+        }while(Tabuleiro[PosicaoX][PosicaoY] === 1);
+        Tabuleiro[PosicaoX][PosicaoY] = 1;
+    }
+
+    /***************************************************
+     * Faz a jogada do player
+     ***************************************************/
+    for(let j = 0; j < Quant_jogadas; j++){
+        let TiroPosicaoX = parseInt(teclado("Digita a coordenada em x:"));
+        let TiroPosicaoY = parseInt(teclado("Digite a coordenada em y:"));
+
+        // verifica se não é numero e os numeros sao validos
+        if(isNaN(TiroPosicaoX) || isNaN(TiroPosicaoY) || TiroPosicaoX < 0 || TiroPosicaoX > Tamanho_Mapa || TiroPosicaoY < 0 || TiroPosicaoY > Tamanho_Mapa){
+            console.log("COORDENADAS INVALIDAS!");
+            console.log("Digite valores entre 0 e 4.");
+            TiroPosicaoX = teclado("Digita a coordenada em x:");
+            TiroPosicaoY = teclado("Digite a coordenada em y:");
         }
 
-        // verifica dentro do Tabuleiro se PosicaoTiro escolhida 
-        if(Tabuleiro[TiroPosicaoX][TiroPosicaoY] === true){
-            // acertou um navio
+        // verifica se a coordenada ja foi usada
+        if(Tabuleiro[TiroPosicaoX][TiroPosicaoY] == 2){
+            console.log("\x1b[33m**** VOCÊ JÁ ATIROU NESSE COORDENADA ****\x1b[0m");
+            console.table(Mapa);
+        }
+
+        // verifica se o tiro acertou um barco
+        if(Tabuleiro[TiroPosicaoX][TiroPosicaoY] === 1){
+            console.log("\x1b[31m***** BARCO NAUFRAGADO *****\x1b[0m");
+            Mapa[TiroPosicaoX][TiroPosicaoY] = "x";
             Pontos += 10;
-            console.log("\n*********************************");
-            console.log("******* BARCO NAUFRAGADO ********");
-            console.log("********** +10 PONTOS ***********");
-            console.log("*********************************\n");
+            console.table(Mapa);
+
+            // remove o barco da posição apos ser acertado - 2
+            Tabuleiro[TiroPosicaoX][TiroPosicaoY] = 2;
         }
 
-        if(Tabuleiro[TiroPosicaoX][TiroPosicaoY] === false){
-            // acertou na agua
-            console.log("\n*********************************");
-            console.log("********* TIRO NA AGUA **********");
-            console.log("*********************************\n");
+        // verifica se um tiro acertou na agua
+        if(Tabuleiro[TiroPosicaoX][TiroPosicaoY] === 0){
+            console.log("\x1b[34m***** TIRO NA ÁGUA *****\x1b[0m");
+            console.table(Mapa);
         }
-
-        // transforma navio atingido em agua
-        Tabuleiro[TiroPosicaoX][TiroPosicaoY] = false;
 
         // reduz a quantidade de tiros
         Quant_Tiros--;
 
-        // quantidade de tiros e pontos
-        console.log("TIROS RESTANTES: ", Quant_Tiros);
-        console.log("PONTUAÇÃO: ", Pontos, "\n");
+        // quantidade de tiros
+        console.log("-> Tiros restantes:", Quant_Tiros);
 
-        // determina o vencedor
+        // quantidade de pontos
+        console.log("-> Potuação:", Pontos);
+
+        // sistema de pontuacao
         if(Quant_Tiros == 0){
             if(Pontos >= 50){
-                console.log("**************************");
-                console.log("PARABENS VOCÊ VENCEU ! ! !");
-                console.log("**************************");
-            }
-            else{
-                console.log("**************************");
-                console.log("QUE PENA, TENTE NOVAMENTE!");
-                console.log("**************************");
-            }
-
-            // encerra o jogo ou inicia nova partida
-            // n + enter = continuar
-            let Continuar = teclado("** Digite n para jogar novamente **\n");
-            if(Continuar == "n"){
-                Fim_Jogo = false;
+                console.log("********************************");
+                console.log("\x1b[32m***** VOCÊ VENCEU ! *****\x1b[0m");
+                console.log("********************************");
             }else{
-                Fim_Jogo = true;
+                console.log("********************************");
+                console.log("\x1b[33m***** TENTE NOVAMENTE ! *****\x1b[0m");
+                console.log("********************************");
             }
         }
     }
-}
 
-/*
-1. Validar as coordenadas
-Seu código verifica se o valor é numérico, mas não verifica se a coordenada está dentro do tabuleiro
-*/
+    // encerra o jogo ou continua nova partida
+    let Continuar = teclado("-> Digite n para jogar novamente:");
+
+    if(Continuar == "n"){
+        Fim_jogo = true;
+    }else{
+        Fim_jogo = false;
+    }
+}

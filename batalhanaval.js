@@ -55,7 +55,15 @@ while(Fim_Jogo == false){
 
     for(let j = 1; j <= Quant_jogadas; j++){
         let TiroPosicaoX = parseInt(teclado("Digite a coordenada em X: "));
+            if(TiroPosicaoX > 5){
+                console.log("Digite uma coordenada de 0 a 5!");
+                let TiroPosicaoX = teclado("Digite a coordenada em X: ");
+            }
         let TiroPosicaoY = parseInt(teclado("Digite a coordenada em Y: "));
+            if(TiroPosicaoY > 5){
+                console.log("Digite uma coordenada de 0 a 5!")
+                let TiroPosicaoX = teclado("Digite a coordenada em Y: ");
+            }
 
         // verifica se input não é número vulgo coordenada
         if(isNaN(TiroPosicaoX) || isNaN(TiroPosicaoY)){
